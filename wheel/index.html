@@ -1,0 +1,131 @@
+<html>
+
+<head>
+	<meta charset="UTF-8" />
+	<title>Hello React!</title>
+	<script src="./js/react.min.js"></script>
+	<script src="./js/react-dom.min.js"></script>
+	<script src="https://cdn.bootcss.com/babel-standalone/6.22.1/babel.min.js"></script>
+</head>
+
+<body>
+	<div id="example"></div>
+	<script type="text/babel">
+		var Wheel = React.createClass({
+		 getDefaultProps: function() {
+		    return {
+		      urls:['./images/lol1.png','./images/lol3.png','./images/lol4.png']
+		    };
+		  },
+		  getInitialState:function(){
+	        return {
+	          tabIndex:0
+	    	};
+	      },
+		  render: function() {
+		  	var urls=this.props.urls;
+		  	var tabIndex = this.state.tabIndex;
+		    return (
+		      <div>
+		        <Tabs urls={urls} tabIndex={tabIndex}/>
+		        <Time/>
+		      </div>
+		    );
+		  }
+		});
+		 
+		var Tabs = React.createClass({
+		  getInitialState:function(){
+	        return {
+	          tabIndex:this.props.tabIndex
+	    	};
+	      },
+		  render: function() {
+		  	var tabIndex = this.state.tabIndex;
+		  	var urls = this.props.urls;
+		  	var url=urls[tabIndex];
+		  	var timer=window.setInterval(()=>{
+		  	  var len=urls.length;
+		  	  if(tabIndex>=len-1){
+				tabIndex=0;
+		  	  }else{
+				tabIndex=tabIndex+1;
+		  	  }
+		  	  this.setState({
+				tabIndex:tabIndex
+		  	  })
+		  	  if(timer){
+		  	  	window.clearInterval(timer);
+			  }
+		  	},2000)
+		  	return (
+			  	<div  className='group'>
+			  	  <img src={url} className="index-img"/>
+			  	  <ul>
+			  	 	 {urls.map((item,index)=>{
+			  	 	 	return <li className={index==tabIndex?'active':''}></li>
+			  	 	 })}
+			  	  </ul>
+			  	</div>
+		    );
+		  }
+		});
+		var Time = React.createClass({
+		  getInitialState:function(){
+	        return {
+	          date:new Date()
+	    	};
+	      },
+		  render: function() {
+		  	var date=this.state.date.toTimeString();
+		  	var timer=window.setInterval(()=>{
+		  		this.setState({
+				  date:new Date()
+		  		})
+		  		if(timer){
+		  	  	  window.clearInterval(timer);
+			  	}
+		    },1000)
+		    return (
+		      <span>
+		        {date}
+		      </span>
+		    );
+		  }
+		});
+		 
+		ReactDOM.render(
+		  <Wheel/>,
+		  document.getElementById('example')
+		);
+	</script>
+	<style>
+		.index-img{
+		  display: inline-block;
+		  width: 335px;
+		  height: 200px;
+		}
+		.group{
+			position: relative;
+		}
+		.group ul{
+			position: absolute;
+			bottom: 0;
+			left: 200px;
+			display: inline-block;
+		}
+		.group ul li{
+			float:left;
+			display: inline-block;
+			width: 10px;
+			height: 10px;
+			background: #fff;
+			border: 1px solid #ddd;
+		}
+		.group ul li.active{
+			background: #e4393c;
+		}
+	</style>
+</body>
+
+</html>
